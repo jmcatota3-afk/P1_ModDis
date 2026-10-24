@@ -6,7 +6,7 @@ Cola::Cola() : frente(nullptr), fin(nullptr), cantidad(0)
 
 Cola::~Cola()
 {
-   // TODO : implement
+   limpiar();
 }
 
 void Cola::encolar(Transaccion* t)
