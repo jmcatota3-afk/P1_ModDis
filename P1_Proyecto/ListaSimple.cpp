@@ -11,7 +11,7 @@ ListaSimple::~ListaSimple()
 
 void ListaSimple::agregar(Transaccion* t)
 {
-   // TODO : implement
+  printf("hola");
 }
 
 Transaccion* ListaSimple::buscar(std::string id)
