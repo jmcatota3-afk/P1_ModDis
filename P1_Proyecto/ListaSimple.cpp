@@ -50,3 +50,4 @@ bool ListaSimple::estaVacia()
 void ListaSimple::limpiar()
 {
    // TODO : implement
+}

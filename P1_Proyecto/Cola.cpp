@@ -63,7 +63,6 @@ bool Cola::estaVacia()
 void Cola::limpiar()
 {
    // limpia o elimina la cola 
-   while(frente != nullptr){
+   while(frente != nullptr)
       desencolar();
-   }
 }
