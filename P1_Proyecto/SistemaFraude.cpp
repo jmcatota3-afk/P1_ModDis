@@ -91,7 +91,7 @@ int SistemaFraude::totalProcesadas()
    return procesadas.tamano();
 }
 
-int totalPorNivel(std::string nivel)
+int SistemaFraude :: totalPorNivel(std::string nivel)
 {
    // TODO : implement
    return 0;
@@ -136,12 +136,32 @@ bool SistemaFraude::evaluarR(Transaccion* t)
    return false;
 }
 
-std::string inferir(bool P, bool Q, bool R);
+std::string SistemaFraude:: inferir(bool P, bool Q, bool R){
+   if(P && Q && R){
+      return NIVEL_ALTO_RIESGO;
+   }else if(P && Q){
+      return NIVEL_SOSPECHOSA;
+   }else if (!P && !Q){
+      return NIVEL_NORMAL;
+   }else {
+      return NIVEL_INUSUAL;
+   }
+}
 
 std::string SistemaFraude::describirRegla(bool P, bool Q, bool R)
 {
-   // TODO : implement
-   return "";
+   // variables 
+   std::string nivel = inferir(P,Q,R);
+   // REGLA CUMPLIDA 
+   if(nivel == NIVEL_ALTO_RIESGO){
+      printf("Regla Aplicada P AND Q AND R 'La transacción es de alto riesgo.'");
+   }else if (nivel == NIVEL_SOSPECHOSA){
+      printf("Regla Aplicada P AND Q 'La transacción es sospechosa.'");
+   }else if (nivel == NIVEL_NORMAL){
+      printf("-P AND -Q ' La transacción se considera normal.'");
+   } else {
+      return "La transacción se considera inusual";
+   }
 }
 
 void SistemaFraude::evaluar(Transaccion* t)

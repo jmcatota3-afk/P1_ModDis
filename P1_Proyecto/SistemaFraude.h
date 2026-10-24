@@ -52,7 +52,7 @@ public:
 
    // ---- Resumen final ----
    int totalProcesadas();
-   int totalPorNivel(Nivel nivel);
+   int totalPorNivel(std::string nivel);
    int totalAlertas();                            // |B U C|
    double porcentajeAlertas();
 
@@ -69,7 +69,7 @@ private:
    bool evaluarP(Transaccion* t);
    bool evaluarQ(Transaccion* t);
    bool evaluarR(Transaccion* t);
-   Nivel inferir(bool P, bool Q, bool R);
+   std::string inferir(bool P, bool Q, bool R);
    std::string describirRegla(bool P, bool Q, bool R);
    void evaluar(Transaccion* t);
    std::string paisHabitual(std::string idCliente, Transaccion* hasta);
