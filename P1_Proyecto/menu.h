@@ -27,7 +27,7 @@ public:
    static int leerOpcion(int min, int max);
 
    // ---- Apoyo para mostrar ----
-   static std::string nombreNivel(Nivel nivel);
+   
 };
 
 #endif

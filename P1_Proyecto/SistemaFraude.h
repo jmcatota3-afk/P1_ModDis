@@ -25,12 +25,9 @@ public:
    SistemaFraude& operator=(const SistemaFraude& otro) = delete;
 
    // ---- CRUD ----
-   bool ingresarTransaccion(std::string idTransaccion, std::string idCliente,
-                            std::string nombreCliente, double montoBancario,
-                            std::string pais, int tiempoTransaccion);
+   bool ingresarTransaccion(std::string idTransaccion, std::string idCliente,std::string nombreCliente, double montoBancario,std::string pais, int tiempoTransaccion);
    Transaccion* buscarTransaccion(std::string idTransaccion);
-   bool modificarTransaccion(std::string idTransaccion, double montoBancario,
-                             std::string pais, int tiempoTransaccion);
+   bool modificarTransaccion(std::string idTransaccion, double montoBancario, std::string pais, int tiempoTransaccion);
    bool eliminarTransaccion(std::string idTransaccion);
 
    // ---- Procesamiento ----
