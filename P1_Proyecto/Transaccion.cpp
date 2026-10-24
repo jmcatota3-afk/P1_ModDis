@@ -1,14 +1,14 @@
 #include "Transaccion.h"
 
 Transaccion::Transaccion()
-   : P(false), Q(false), R(false), nivel(NORMAL), estadoRevision("pendiente")
+   : P(false), Q(false), R(false), nivel(""), estadoRevision("pendiente")
 {
 }
 
 Transaccion::Transaccion(std::string idTransaccion, std::string idCliente,std::string nombreCliente, double montoBancario,std::string pais, int tiempoTransaccion)
    : idTransaccion(idTransaccion), idCliente(idCliente), nombreCliente(nombreCliente),
      montoBancario(montoBancario), pais(pais), tiempoTransaccion(tiempoTransaccion),
-     P(false), Q(false), R(false), nivel(NORMAL), estadoRevision("pendiente")
+     P(false), Q(false), R(false), nivel(""), estadoRevision("pendiente")
 {
 }
 
@@ -58,10 +58,10 @@ bool Transaccion::getR() const {
 void Transaccion::setR(bool valor) { 
     R = valor;
  }
-Nivel Transaccion::getNivel() const { 
+std::string Transaccion::getNivel() const { 
     return nivel;
  }
-void Transaccion::setNivel(Nivel nuevoNivel) { 
+void Transaccion::setNivel(std::string nuevoNivel) { 
     nivel = nuevoNivel; 
 }
 std::string Transaccion::getRegla() const { 

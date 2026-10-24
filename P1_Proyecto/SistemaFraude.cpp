@@ -91,7 +91,7 @@ int SistemaFraude::totalProcesadas()
    return procesadas.tamano();
 }
 
-int SistemaFraude::totalPorNivel(Nivel nivel)
+int totalPorNivel(std::string nivel)
 {
    // TODO : implement
    return 0;
@@ -136,11 +136,7 @@ bool SistemaFraude::evaluarR(Transaccion* t)
    return false;
 }
 
-Nivel SistemaFraude::inferir(bool P, bool Q, bool R)
-{
-   // TODO : implement
-   return NORMAL;
-}
+std::string inferir(bool P, bool Q, bool R);
 
 std::string SistemaFraude::describirRegla(bool P, bool Q, bool R)
 {

@@ -7,8 +7,10 @@
 #define TRANSACCION_H
 
 #include <string>
-
-enum Nivel { NORMAL, INUSUAL, SOSPECHOSA, ALTO_RIESGO };
+const std::string NIVEL_NORMAL      = "NORMAL";
+const std::string NIVEL_INUSUAL     = "INUSUAL";
+const std::string NIVEL_SOSPECHOSA  = "SOSPECHOSA";
+const std::string NIVEL_ALTO_RIESGO = "ALTO RIESGO";
 
 class Transaccion
 {
@@ -33,8 +35,8 @@ public:
    void setQ(bool valor);
    bool getR() const;
    void setR(bool valor);
-   Nivel getNivel() const;
-   void setNivel(Nivel nuevoNivel);
+   std::string getNivel() const;
+   void setNivel(std::string nuevoNivel);
    std::string getRegla() const;
    void setRegla(std::string nuevaRegla);
    std::string getEstadoRevision() const;
@@ -55,7 +57,7 @@ private:
    bool P;
    bool Q;
    bool R;
-   Nivel nivel;
+   std::string nivel;          // uno de los NIVEL_... ("" = todavia sin evaluar)
    std::string regla;
 
    // Revision del analista
