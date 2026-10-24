@@ -1,27 +1,25 @@
 #include "Nodo.h"
 
+// Constructor 
 Nodo::Nodo(Transaccion* dato) : dato(dato), siguiente(nullptr)
 {
 }
-
+// Destructor 
 Nodo::~Nodo()
 {
-   // TODO : implement
 }
-
+// devueleve el dato
 Transaccion* Nodo::getDato()
 {
-   // TODO : implement
-   return nullptr;
+   return dato;
 }
-
+// devuelve el dato siguiente 
 Nodo* Nodo::getSiguiente()
 {
-   // TODO : implement
-   return nullptr;
+   return siguiente;
 }
 
 void Nodo::setSiguiente(Nodo* siguiente)
 {
-   // TODO : implement
+   this->siguiente = siguiente;
 }
