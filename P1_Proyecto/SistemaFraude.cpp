@@ -7,7 +7,8 @@
 #include "Transaccion.h"
 #include <cmath>
 #include <iostream>
-
+#include <fstream>
+#include <sstream>
 SistemaFraude::SistemaFraude()
    : limiteDiario(5000.0), ventanaMin(5), maxTx(3)
 {
@@ -362,4 +363,60 @@ void SistemaFraude::vaciarClasificacion()
 bool SistemaFraude::existeId(std::string idTransaccion)
 {
    return procesadas.contiene(idTransaccion);
+}
+bool SistemaFraude::guardarArchivo() {
+    std::ofstream archivo("transacciones.txt"); // O la ruta que prefieras usar
+    if (!archivo.is_open()) {
+        return false;
+    }
+
+    Nodo* actual = procesadas.inicio();
+    while (actual != nullptr) {
+        Transaccion* t = actual->getDato();
+        if (t != nullptr) {
+            // Ejemplo de formato para guardar los datos básicos de la transacción
+            archivo << t->getId() << ","
+                    << t->getIdCliente() << ","
+                    << t->getNombreCliente() << ","
+                    << t->getMontoBancario() << ","
+                    << t->getPais() << ","
+                    << t->getTiempoTransaccion() << "\n";
+        }
+        actual = actual->getSiguiente();
+    }
+    archivo.close();
+    return true;
+}
+
+bool SistemaFraude::cargarArchivo() {
+    std::ifstream archivo("transacciones.txt");
+    if (!archivo.is_open()) {
+        return false;
+    }
+
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string idTransaccion, idCliente, nombreCliente, pais;
+        double montoBancario;
+        int tiempoTransaccion;
+        char coma;
+
+        // Leyendo el formato separado por comas
+        if (std::getline(ss, idTransaccion, ',') &&
+            std::getline(ss, idCliente, ',') &&
+            std::getline(ss, nombreCliente, ',') &&
+            (ss >> montoBancario) && (ss >> coma) &&
+            std::getline(ss, pais, ',') &&
+            (ss >> tiempoTransaccion)) {
+            
+            // Ingresamos la transacción leída al sistema
+            ingresarTransaccion(idTransaccion, idCliente, nombreCliente, montoBancario, pais, tiempoTransaccion);
+        }
+    }
+    archivo.close();
+    
+    // Opcional: procesar inmediatamente las transacciones cargadas
+    procesarCola(); 
+    return true;
 }
