@@ -1,0 +1,9 @@
+T0001|U0001|Mateo|25000|Colombia|820|pendiente
+T0002|U0001|Mateo|7000|Ecuador|871|pendiente
+T0003|U0001|Mateo|8000|Ecuador|872|pendiente
+T0004|U0001|Mateo|90000|Ecuador|873|pendiente
+T0005|U0001|Mateo|10000|Ecuador|874|pendiente
+T0006|U0001|Mateo|200|Ecuador|870|pendiente
+T0007|U0001|Mateo|7000|Colombia|871|pendiente
+T0008|U0001|Mateo|8000|Colombia|872|pendiente
+T0010|U0001|Mateo|10000|Colombia|874|fraude confirmado
