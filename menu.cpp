@@ -77,7 +77,7 @@ void Menu::menuPrincipal(SistemaFraude& sistema)
                         if (sistema.cantidadAlertas() > 0)
                         {
                             sistema.resolverSiguienteAlerta(true);
-                            std::cout << "\n[OK] Alerta atendida y retirada de la pila exitosamente.\n";
+                            std::cout << "\n Alerta atendida y retirada de la pila exitosamente.\n";
                         }
                         else
                         {
@@ -96,22 +96,22 @@ void Menu::menuPrincipal(SistemaFraude& sistema)
                 {
                     if (archivo.guardar(sistema))
                     {
-                        std::cout << "\n[OK] Datos guardados exitosamente en 'transacciones.txt'.\n";
+                        std::cout << "\nDatos guardados exitosamente en 'transacciones.txt'.\n";
                     }
                     else
                     {
-                        std::cout << "\n[Error] No se pudo abrir o guardar el archivo.\n";
+                        std::cout << "\nNo se pudo abrir o guardar el archivo.\n";
                     }
                 }
                 else
                 {
                     if (archivo.cargar(sistema))
                     {
-                        std::cout << "\n[OK] Datos cargados y evaluados exitosamente.\n";
+                        std::cout << "\nDatos cargados y evaluados exitosamente.\n";
                     }
                     else
                     {
-                        std::cout << "\n[Error] No se pudo abrir o cargar el archivo.\n";
+                        std::cout << "\nNo se pudo abrir o cargar el archivo.\n";
                     }
                 }
                 break;
@@ -142,12 +142,12 @@ void Menu::menuCRUD(SistemaFraude& sistema)
     {
         std::cout << "\n ========== MENU DE OPERACIONES DE TRANSACCIONES =============\n";
         std::cout << "==========================================================================\n";
-        std::cout << "1. INGRESAR\n";
-        std::cout << "2. MOSTRAR (Procesadas)\n";
-        std::cout << "3. BUSCAR\n";
-        std::cout << "4. ELIMINAR\n";
-        std::cout << "5. MODIFICAR\n";
-        std::cout << "6. VOLVER\n";
+        std::cout << "1. Ingresar\n";
+        std::cout << "2. Mostrar transacciones (Procesadas)\n";
+        std::cout << "3. Buscar\n";
+        std::cout << "4. Eliminar\n";
+        std::cout << "5. Modificar\n";
+        std::cout << "6. Volver\n";
         std::cout << "==========================================================================\n";
         std::cout << "Ingrese una opcion: ";
         
