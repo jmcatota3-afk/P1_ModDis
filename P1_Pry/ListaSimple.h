@@ -17,8 +17,6 @@ class ListaSimple
 public:
    ListaSimple();
    ~ListaSimple();
-   ListaSimple(const ListaSimple& otra) = delete;
-   ListaSimple& operator=(const ListaSimple& otra) = delete;
 
    void agregar(Transaccion* t);
    Transaccion* buscar(std::string id);

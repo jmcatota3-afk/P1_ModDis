@@ -9,8 +9,6 @@ class Pila
 public:
    Pila();
    ~Pila();
-   Pila(const Pila& otra) = delete;
-   Pila& operator=(const Pila& otra) = delete;
 
    void push(Transaccion* t);
    Transaccion* pop();                 // nullptr si esta vacia

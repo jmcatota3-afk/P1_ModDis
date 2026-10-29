@@ -9,8 +9,6 @@ class Cola
 public:
    Cola();
    ~Cola();
-   Cola(const Cola& otra) = delete;
-   Cola& operator=(const Cola& otra) = delete;
 
    void encolar(Transaccion* t);
    Transaccion* desencolar();          // nullptr si esta vacia

@@ -3,114 +3,117 @@
  * Purpose: Implementación de la persistencia basada en el formato con delimitador '|'
  ***********************************************************************/
 
-/*#include "Archivo.h"
-#include "Transaccion.h"
+#include "Archivo.h"
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <iostream>
 
-Archivo::Archivo(std::string ruta) : ruta(ruta)
+Archivo::Archivo(std::string rutaTransacciones, std::string rutaClientes)
+   : rutaTransacciones(rutaTransacciones), rutaClientes(rutaClientes)
 {
 }
 
 bool Archivo::guardar(SistemaFraude& sistema)
 {
-   std::ofstream archivo(ruta);
-   if (!archivo.is_open())
+   std::ofstream archivoClientes(rutaClientes);
+   if (!archivoClientes.is_open())
    {
-       return false;
+      return false;
+   }
+   NodoCliente* c = sistema.getClientes().inicio();
+   while (c != nullptr)
+   {
+      Cliente* cli = c->getDato();
+      archivoClientes << cli->getIdCliente() << "|" << cli->getNombreCliente() << "|"
+                      << cli->getPaisHabitual() << "|" << cli->getLimiteDiario() << "\n";
+      c = c->getSiguiente();
    }
 
-   // Obtenemos la lista de transacciones procesadas del sistema
-   ListaSimple& procesadas = sistema.getProcesadas();
-   Nodo* actual = procesadas.inicio();
-
+   std::ofstream archivoTx(rutaTransacciones);
+   if (!archivoTx.is_open())
+   {
+      return false;
+   }
+   Nodo* actual = sistema.getProcesadas().inicio();
    while (actual != nullptr)
    {
-       Transaccion* t = actual->getDato();
-       if (t != nullptr)
-       {
-           // Formato especificado: id|idCliente|nombreCliente|monto|pais|Hora|estadoRevision
-           archivo << t->getId() << "|"
-                   << t->getIdCliente() << "|"
-                   << t->getNombreCliente() << "|"
-                   << t->getMontoBancario() << "|"
-                   << t->getPais() << "|"
-                   << t->getTiempoTransaccion() << "|"
-                   << t->getEstadoRevision() << "\n";
-       }
-       actual = actual->getSiguiente();
+      Transaccion* t = actual->getDato();
+      archivoTx << t->getIdT() << "|" << t->getIdCliente() << "|" << t->getMontoBancario() << "|"
+                << t->getPaisTransaccion() << "|" << static_cast<long long>(t->getFechaHora()) << "|"
+                << t->getEstadoRevision() << "\n";
+      actual = actual->getSiguiente();
    }
-
-   archivo.close();
-   return true;
+   actual = sistema.getPendientes().inicio();
+   while (actual != nullptr)
+   {
+      Transaccion* t = actual->getDato();
+      archivoTx << t->getIdT() << "|" << t->getIdCliente() << "|" << t->getMontoBancario() << "|"
+                << t->getPaisTransaccion() << "|" << static_cast<long long>(t->getFechaHora()) << "|"
+                << t->getEstadoRevision() << "\n";
+      actual = actual->getSiguiente();
+   }
+   return archivoTx.good() && archivoClientes.good();
 }
 
 bool Archivo::cargar(SistemaFraude& sistema)
 {
-   std::ifstream archivo(ruta);
-   if (!archivo.is_open())
+   // 1) Clientes primero: las transacciones dependen de ellos.
+   std::ifstream archivoClientes(rutaClientes);
+   if (archivoClientes.is_open())
    {
-       return false;
+      std::string linea;
+      while (std::getline(archivoClientes, linea))
+      {
+         std::stringstream ss(linea);
+         std::string id, nombre, pais, sLimite;
+         if (!std::getline(ss, id, '|') || !std::getline(ss, nombre, '|') ||
+             !std::getline(ss, pais, '|') || !std::getline(ss, sLimite, '|'))
+         {
+            continue;
+         }
+         try
+         {
+            sistema.registrarCliente(id, nombre, pais, std::stod(sLimite));
+         }
+         catch (std::exception&)
+         {
+            continue;
+         }
+      }
    }
 
+   // 2) Transacciones.
+   std::ifstream archivoTx(rutaTransacciones);
+   if (!archivoTx.is_open())
+   {
+      return false;
+   }
    std::string linea;
-   struct InfoRevision {
-       std::string id;
-       std::string estado;
-   };
-   std::vector<InfoRevision> pendientesRevision;
-
-   while (std::getline(archivo, linea))
+   while (std::getline(archivoTx, linea))
    {
-       if (linea.empty()) continue;
-
-       std::stringstream ss(linea);
-       std::string idTransaccion, idCliente, nombreCliente, sMonto, pais, sTiempo, estadoRevision;
-
-       // Extraer campos separados por barra vertical '|'
-       if (std::getline(ss, idTransaccion, '|') &&
-           std::getline(ss, idCliente, '|') &&
-           std::getline(ss, nombreCliente, '|') &&
-           std::getline(ss, sMonto, '|') &&
-           std::getline(ss, pais, '|') &&
-           std::getline(ss, sTiempo, '|') &&
-           std::getline(ss, estadoRevision, '|'))
-       {
-           try
-           {
-               double montoBancario = std::stod(sMonto);
-               int tiempoTransaccion = std::stoi(sTiempo);
-
-               // Ingresamos la transacción al sistema (se encola)
-               if (sistema.ingresarTransaccion(idTransaccion, idCliente, nombreCliente, montoBancario, pais, tiempoTransaccion))
-               {
-                   pendientesRevision.push_back({idTransaccion, estadoRevision});
-               }
-           }
-           catch (...)
-           {
-               // Si ocurre un error de conversión en una línea, se omite y continúa
-               continue;
-           }
-       }
+      std::stringstream ss(linea);
+      std::string id, idCliente, sMonto, pais, sFecha, estado;
+      if (!std::getline(ss, id, '|') || !std::getline(ss, idCliente, '|') ||
+          !std::getline(ss, sMonto, '|') || !std::getline(ss, pais, '|') ||
+          !std::getline(ss, sFecha, '|'))
+      {
+         continue;
+      }
+      if (!std::getline(ss, estado, '|') || estado.empty())
+      {
+         estado = ESTADO_PENDIENTE;
+      }
+      try
+      {
+         sistema.cargarTransaccion(id, idCliente, std::stod(sMonto), pais,
+                                   static_cast<std::time_t>(std::stoll(sFecha)), estado);
+      }
+      catch (std::exception&)
+      {
+         continue;
+      }
    }
 
-   archivo.close();
-   
-   // Procesamos la cola para que se evalúen las reglas lógicas y se clasifiquen las transacciones
+   // 3) Evalua las reglas y clasifica todo.
    sistema.procesarCola();
-
-   // Restauramos el estado de revisión original del analista para cada transacción cargada
-   for (const auto& item : pendientesRevision)
-   {
-       Transaccion* t = sistema.buscarTransaccion(item.id);
-       if (t != nullptr)
-       {
-           t->setEstadoRevision(item.estado);
-       }
-   }
-
    return true;
-}*/
+}

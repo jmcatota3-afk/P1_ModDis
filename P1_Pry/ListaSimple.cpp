@@ -3,7 +3,7 @@
  * Purpose: Implementación de la lista simplemente enlazada para transacciones
  *****************************************************************──────*/
 
-/*#include "ListaSimple.h"
+#include "ListaSimple.h"
 
 ListaSimple::ListaSimple() : cabeza(nullptr), ultimo(nullptr), cantidad(0) {}
 
@@ -26,7 +26,7 @@ void ListaSimple::agregar(Transaccion* t) {
 Transaccion* ListaSimple::buscar(std::string id) {
     Nodo* actual = cabeza;
     while (actual != nullptr) {
-        if (actual->getDato() != nullptr && actual->getDato()->getId() == id) {
+        if (actual->getDato() != nullptr && actual->getDato()->getIdT() == id) {
             return actual->getDato();
         }
         actual = actual->getSiguiente();
@@ -47,9 +47,8 @@ bool ListaSimple::eliminar(std::string id) {
     Nodo* anterior = nullptr;
 
     while (actual != nullptr) {
-        if (actual->getDato() != nullptr && actual->getDato()->getId() == id) {
+        if (actual->getDato() != nullptr && actual->getDato()->getIdT() == id) {
             if (anterior == nullptr) {
-                // El elemento a eliminar está en la cabeza
                 cabeza = actual->getSiguiente();
                 if (cabeza == nullptr) {
                     ultimo = nullptr;
@@ -60,9 +59,7 @@ bool ListaSimple::eliminar(std::string id) {
                     ultimo = anterior;
                 }
             }
-            
-            // Liberamos únicamente el nodo de la lista, NO la transacción
-            delete actual;
+            delete actual;      // solo el nodo, NO la transaccion
             cantidad--;
             return true;
         }
@@ -88,11 +85,10 @@ void ListaSimple::limpiar() {
     Nodo* actual = cabeza;
     while (actual != nullptr) {
         Nodo* siguiente = actual->getSiguiente();
-        // Liberamos únicamente el nodo de la lista, NO la transacción
-        delete actual;
+        delete actual;          // solo el nodo, NO la transaccion
         actual = siguiente;
     }
     cabeza = nullptr;
     ultimo = nullptr;
     cantidad = 0;
-}*/
+}

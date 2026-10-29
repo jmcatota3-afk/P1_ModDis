@@ -8,6 +8,7 @@
 #include <string>
 using namespace std;
 class Cliente {
+public:
     Cliente(const string& idCliente, const string& nombreCliente,
            const string& paisHabitual, double limiteDiario);
  

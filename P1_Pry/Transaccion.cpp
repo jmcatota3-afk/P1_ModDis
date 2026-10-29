@@ -1,5 +1,6 @@
 #include "Transaccion.h"
 #include <sstream>
+#include <cstdlib>
 #include <iomanip>
 //Contador de todoas las transacciones 
 int Transaccion::idTransaccion = 0;

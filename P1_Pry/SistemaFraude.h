@@ -1,17 +1,11 @@
-/***********************************************************************
- * Module:  SistemaFraude.h
- * Purpose: Coordina todo: CRUD, evaluacion logica, conjuntos, alertas,
- *          resumen y archivo
- * Comment: Es el UNICO dueno de las transacciones: las crea con new y
- *          las libera en el destructor. Las demas estructuras solo
- *          guardan punteros.
- ***********************************************************************/
-
 #ifndef SISTEMAFRAUDE_H
 #define SISTEMAFRAUDE_H
 
 #include <string>
+#include <ctime>
 #include "Transaccion.h"
+#include "Cliente.h"
+#include "ListaCliente.h"
 #include "ListaSimple.h"
 #include "Cola.h"
 #include "Pila.h"
@@ -21,15 +15,21 @@ class SistemaFraude
 public:
    SistemaFraude();
    ~SistemaFraude();
-   SistemaFraude(const SistemaFraude& otro) = delete;
-   SistemaFraude& operator=(const SistemaFraude& otro) = delete;
 
-   // ---- CRUD ----
-   bool ingresarTransaccion(std::string idTransaccion, std::string idCliente,std::string nombreCliente, double montoBancario,std::string pais, int tiempoTransaccion);
-   // Genera automáticamente el ID de transacción y reutiliza/genera el ID del cliente.
-   bool ingresarTransaccionAutomatica(std::string nombreCliente, double montoBancario, std::string pais, int tiempoTransaccion, std::string& idTransaccionGenerado, std::string& idClienteGenerado);
+   // ---- Clientes ----
+   bool registrarCliente(std::string idCliente, std::string nombre,
+                         std::string paisHabitual, double limiteDiario);
+   Cliente* buscarCliente(std::string idCliente);
+   ListaCliente& getClientes();
+
+   // ---- CRUD de transacciones ----
+   bool ingresarTransaccion(std::string idCliente, double monto,
+                            std::string pais, std::string& idGenerado);
+   bool cargarTransaccion(std::string id, std::string idCliente, double monto,
+                          std::string pais, std::time_t fechaHora,
+                          std::string estadoRevision);
    Transaccion* buscarTransaccion(std::string idTransaccion);
-   bool modificarTransaccion(std::string idTransaccion, double montoBancario, std::string pais, int tiempoTransaccion);
+   bool modificarTransaccion(std::string idTransaccion, double monto, std::string pais);
    bool eliminarTransaccion(std::string idTransaccion);
 
    // ---- Procesamiento ----
@@ -44,7 +44,7 @@ public:
    void unionBC(ListaSimple& resultado);          // B U C
    void diferenciaAC(ListaSimple& resultado);     // A - C
 
-   // ---- Alertas ----
+   // ---- Alertas (pila) ----
    Transaccion* verSiguienteAlerta();
    bool resolverSiguienteAlerta(bool esFraude);
    int cantidadAlertas();
@@ -59,36 +59,28 @@ public:
    ListaSimple& getProcesadas();
    Cola& getPendientes();
 
-   // ---- Archivo ----
-   bool guardarArchivo();
-   bool cargarArchivo();
-
 private:
-   // Evaluacion logica
    bool evaluarP(Transaccion* t);
    bool evaluarQ(Transaccion* t);
    bool evaluarR(Transaccion* t);
    std::string inferir(bool P, bool Q, bool R);
    std::string describirRegla(bool P, bool Q, bool R);
    void evaluar(Transaccion* t);
-   std::string paisHabitual(std::string idCliente, Transaccion* hasta);
 
-   // Clasificacion y apoyo
    void clasificar(Transaccion* t);
    void vaciarClasificacion();
    bool existeId(std::string idTransaccion);
 
-   ListaSimple procesadas;     // duena de las transacciones ya evaluadas
-   Cola pendientes;            // duena de las transacciones sin evaluar
+   ListaCliente clientes;
+   ListaSimple procesadas;
+   Cola pendientes;
    Pila alertas;
    ListaSimple conjuntoA;
    ListaSimple conjuntoB;
    ListaSimple conjuntoC;
 
-   double limiteDiario;
-   int ventanaMin;
-   int maxTx;
-   std::string rutaArchivo;
+   long ventanaSeg;            // 5 min = 300 s
+   int maxTx;                  // R: MAS de 3 operaciones
 };
 
 #endif

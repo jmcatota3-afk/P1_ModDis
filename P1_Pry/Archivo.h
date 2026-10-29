@@ -16,13 +16,14 @@
 class Archivo
 {
 public:
-   Archivo(std::string ruta);
+   Archivo(std::string rutaTransacciones, std::string rutaClientes);
 
    bool guardar(SistemaFraude& sistema);
    bool cargar(SistemaFraude& sistema);
 
 private:
-   std::string ruta;
+   std::string rutaTransacciones;
+   std::string rutaClientes;
 };
 
 #endif
